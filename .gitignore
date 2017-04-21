@@ -1,2 +1,5 @@
 var/mysql/
 var/log/
+
+# spécifique au wordpress/blog
+datas/

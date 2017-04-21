@@ -16,3 +16,8 @@ docker run --rm 								\
 
 cp WordPress.gitignore html/.gitignore
 
+cd html
+
+git init
+
+
