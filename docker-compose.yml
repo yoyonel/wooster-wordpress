@@ -41,7 +41,7 @@ memcached:
 influxsrv:
   # image: tutum/influxdb:0.8.8
   image: tutum/influxdb:latest
-  container_name: influxsrv
+  #container_name: influxsrv
   ports:
     - "8083:8083"
     - "8086:8086"
@@ -63,7 +63,7 @@ influxsrv:
 #     - /var/lib/docker/:/var/lib/docker:ro
 cadvisor:
   image: google/cadvisor
-  container_name: cadvisor
+  # container_name: cadvisor
   command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxsrv:8086
   ports:
     - "8080:8080"
@@ -77,7 +77,7 @@ cadvisor:
 
 grafana:
   image: grafana/grafana
-  container_name: grafana
+  # container_name: grafana
   ports:
     - "3000:3000"
   links:
