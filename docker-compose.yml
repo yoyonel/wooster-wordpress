@@ -13,21 +13,19 @@ nginx:
     - ./var/log/nginx:/var/log/nginx
 
 wordpress:
-  ############
-  # BUILD
-  ############
   build: wordpress
   # Alpine Version
   # dockerfile: Dockerfile.alpine
-  ############
+
   restart: always
+  
   links:
     - mysql
     - memcached
   environment:
-    WORDPRESS_DB_USER: wordpress
-    WORDPRESS_DB_PASSWORD: password
-    WORDPRESS_DB_NAME: wordpress
+    WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+    WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
 
 mysql:
   image: mariadb
@@ -36,9 +34,9 @@ mysql:
     - ./var/mysql:/var/lib/mysql
   environment:
     MYSQL_DATABASE: wordpress
-    MYSQL_USER: wordpress
-    MYSQL_PASSWORD: password
-    MYSQL_ROOT_PASSWORD: password
+    MYSQL_USER: ${MYSQL_USER}
+    MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
 memcached:
   image: memcached
@@ -47,6 +45,7 @@ memcached:
 influxsrv:
   # image: tutum/influxdb:0.8.8
   image: tutum/influxdb:latest
+  restart: always
   #container_name: influxsrv
   ports:
     - "8083:8083"
@@ -57,19 +56,9 @@ influxsrv:
   environment:
     - PRE_CREATE_DB=cadvisor
 
-# cadvisor:
-#   image: google/cadvisor
-#   ports:
-#     - 8080:8080
-#   restart: always
-#   volumes:
-#     - /:/rootfs:ro
-#     - /var/run:/var/run:rw
-#     - /sys:/sys:ro
-#     - /var/lib/docker/:/var/lib/docker:ro
 cadvisor:
   image: google/cadvisor
-  # container_name: cadvisor
+  restart: always
   command:
     - -storage_driver=influxdb
     - -storage_driver_db=cadvisor
@@ -86,7 +75,7 @@ cadvisor:
 
 grafana:
   image: grafana/grafana
-  # container_name: grafana
+  restart: always
   ports:
     - "3000:3000"
   links:
@@ -95,5 +84,5 @@ grafana:
     - INFLUXDB_HOST=localhost
     - INFLUXDB_PORT=8086
     - INFLUXDB_NAME=cadvisor
-    - INFLUXDB_USER=root
-    - INFLUXDB_PASS=root
+    - INFLUXDB_USER=${INFLUXDB_USER}
+    - INFLUXDB_PASS=${INFLUXDB_PASS}
